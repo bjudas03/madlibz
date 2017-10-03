@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   var madlib = sequelize.define('madlib', {
     title: DataTypes.STRING,
-    body: DataTypes.TEXT
+    body: DataTypes.TEXT,
+    userId: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {

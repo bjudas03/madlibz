@@ -1,47 +1,48 @@
+
 <h2>Profile Page</h2>
 
 <a href="/game/saved">View Saved Madlibz</a> </br>
-<!-- <a href="/auth/login">Login</a>
-<a href="/auth/logout">Logout</a>
-<a href="/profile">Profile</a> -->
 
-<form action="" id="put-form">
-  <label for="title">New Title</label>
-  <input type="text" name="name" placeholder="New Title">
+ <form action = "">
+  <h1>Choose a Story</h1>
+  <fieldset>
+  <select id = "selStory">
+   <option>Story 1</option>
+   <option>Story 2</option>
+   <option>Story 3</option>
+  </select>
+  </fieldset>
+ </form>
 
-  <label for="story">New Story</label></br>
-  <textarea name="members"></textarea>
+ 	<div class="well">
+ 		
+  	</div>
+ </body>
+</html>
 
-  <input type="submit" value="">
-</form>
 
 
 
 <a href="/">Home</a>
 
-<script type="text/javascript">
-$('.put-form').on('submit', function(e) {
-  e.preventDefault();
-  var teamElement = $(this);
-  var teamUrl = teamElement.attr('action');
-  var teamData = teamElement.serialize();
-  $.ajax({
-    method: 'PUT',
-    url: teamUrl,
-    data: teamData
-  }).done(function(data) {
-    // get data returned from the PUT route
-    console.log(data);
+<!-- <script>
+	$('#selStory').on('mouseUp', function(e) {
+		e.preventDefault();
+		var story = $('#selStory').val();
+	})
+</script> -->
 
-    // do stuff when the PUT action is complete
-    teamElement.remove();
-
-    // or, you can redirect to another page
-    window.location = '/teams';
-  });
-});
-</script>
-
+   <script src="//code.jquery.com/jquery.js"></script>
+<!-- TO DO-
+	//dropdown with various scripted stories (by title)
+		//on release fill location in profile ejs w/ id partial ejs
+	//partials insert with individual story
+		//hardcode scripted stories w/ missing words (found in partials folder)=> use ejs to insert
+		//input boxes for replacement word specific words (for api call)
+			//api calls to giphy for related gifs
+				/// multiple api calls at same time -> use async
+		//replace words with gifs			
+	
 
 
 
