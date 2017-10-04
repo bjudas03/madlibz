@@ -1,0 +1,13 @@
+<h1>Madlibz</h1>
+
+<% madlibs.forEach(function(madlib) { %>
+  <div class="well">
+    <h2>
+      <a href="/madlibs/<%= madlib.id %>"><%= madlib.title %></a>
+    </h2>
+  </div>
+<% }); %>
+
+<hr />
+
+<a href="/">&larr; Back Home</a>

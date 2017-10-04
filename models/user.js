@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     classMethods: {
       associate: function(models) {
+        models.user.belongsToMany(models.madlib, {through: "usersMadlibs"})
         // associations can be defined here
       }
      },
