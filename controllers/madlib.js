@@ -5,6 +5,8 @@ var db = require('../models');
 var passport = require('../config/ppConfig');
 var request = require('request');
 
+var responseText;
+
 router.get('/', function(req, res) {
 	//add functionality to access madlibz table
 	//access all stored madlibs
@@ -34,17 +36,27 @@ router.post('/', function(req, res) {
 		qs: {q: q},
 		json:true
 	}, function(error, response, body) {
-		res.send(body);
 		var dataObj = body;
-		console.log(dataObj);
+		responseText = dataObj.madlib
+		// responseText = JSON.stringify(responseText);
+		res.render("madlibs/show", {madlib: responseText});
+		// console.log(responseText);
+		// res.send(responseText);
+		// JSON.stringify(dataObj);
+		// console.log(dataObj);
 	});
-
+	console.log(responseText);
+	//code below works! just need to uncomment to reinitialize
 	db.madlib.create({
 		title: req.body.title,
-		body: req.body.body
-	}).then(function(madlib) {
+		body: responseText  //find a way to send the RESPONSE from the api call to the DB - This is sending the body (before it is jumbled)
+	}).done() //this is in for testing. Remove
+	// .then(function(madlib) {
 		// res.redirect('/madlibs/')
-	});
+	// });
 });
+
+
+
 
 module.exports = router;
