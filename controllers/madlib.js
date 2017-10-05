@@ -26,35 +26,42 @@ router.get('/:id', function(req,res) {
 	})
 });
 
+
 //create new madlib
 router.post('/', function(req, res) {
 	var url = 'http://libberfy.herokuapp.com';
 	var q = req.body.body;
+	// var fullUrl = url +'html_form=1&'+q;
 
 	request({
+		// url: fullUrl,
 		url: url,
 		qs: {q: q},
+		// html_form: true,
 		json:true
 	}, function(error, response, body) {
+		// console.log(body);
 		var dataObj = body;
 		responseText = dataObj.madlib
-		// responseText = JSON.stringify(responseText);
-		res.render("madlibs/show", {madlib: responseText});
 		// console.log(responseText);
-		// res.send(responseText);
-		// JSON.stringify(dataObj);
-		// console.log(dataObj);
+		responseText = JSON.stringify(responseText);
+		// console.log(responseText);
+
+		//code below works! just need to uncomment to reinitialize
+		db.madlib.create({
+			title: req.body.title,
+			body: responseText  //find a way to send the RESPONSE from the api call to the DB - This is sending the body (before it is jumbled)
+		}).then(function(result) {
+			console.log(result);
+			res.render("madlibs/show", {madlib: responseText});
+		// }); //this is in for testing. Remove
+		// // .then(function(madlib) {
+		// 	// res.redirect('/madlibs/')
+		});
 	});
-	console.log(responseText);
-	//code below works! just need to uncomment to reinitialize
-	db.madlib.create({
-		title: req.body.title,
-		body: responseText  //find a way to send the RESPONSE from the api call to the DB - This is sending the body (before it is jumbled)
-	}).done() //this is in for testing. Remove
-	// .then(function(madlib) {
-		// res.redirect('/madlibs/')
-	// });
+	
 });
+
 
 
 
