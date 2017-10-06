@@ -6,10 +6,35 @@
       <a href="/madlibs/<%= madlib.id %>"><%= madlib.title %></a>
     </h2>
     <a href="/madlibs/<%= madlib.id %>/edit" class="btn btn-info glyphicon glyphicon-edit"></a>
-  	<a href="/madlibs/<%= madlib.id %>" class="btn btn-danger glyphicon glyphicon-trash delete-btn"></a>
+  	<a href="/madlibs/<%= madlib.id %>" id="delete-link" class="btn btn-danger glyphicon glyphicon-trash delete-btn"></a>
   </div>
 <% }); %>
 
 <hr />
 
 <a href="/profile">&larr; Back Home</a>
+
+
+<script src="https://code.jquery.com/jquery.js"></script>
+
+<script>
+	$('#delete-link').on('click', function(e) {
+		console.log("I'm in the delete button");
+  e.preventDefault();
+  var url = $(this) .attr('href');
+  console.log(url);
+  $.ajax({
+    method: 'DELETE',
+    url: url
+   }).then(window.location.href = '/madlibs'); 
+   	
+   
+  //   // get data returned from the DELETE route
+  	// console.log(data);
+  //   // do stuff when the DELETE action is complete
+  //   teamElement.remove();
+  //   // or, you can redirect to another page
+		// window.location.href = '/profile';  
+	
+});
+</script>

@@ -1,6 +1,6 @@
 <h1>Edit</h1>
 
-<form action="/madlibs/<%= madlib.id %>" method="PUT" class="edit-form" role="form">
+<form action="/madlibs/<%= madlib.id %>" method="POST" id="edit-form" role="form">
   <div class="form-group">
     <label for="title">TITLE</label>
     <input type="text" class="form-control" id="title" placeholder="TITLE" name="title" value="<%= madlib.title %>">
@@ -16,11 +16,10 @@
 
 <a href="/profile">&larr; Back</a>
 
+<script src="https://code.jquery.com/jquery.js"></script>
 
 <script>
-	
-	$('#edit-button').on('click', function(e) {
-  	console.log("I'm in the button");
+	$('#edit-form').submit(function(e) {
     e.preventDefault();
     var url = $(this).attr('action');
     var data = $(this).serialize();
@@ -30,8 +29,8 @@
       method: 'PUT',
       data: data
     }).done(function(data) {
-    	console.log(data, "--------------------------");
-      window.location.href = '/madlibs/:id';
+    	// console.log("ajax call is finished" , "--------------------------");
+      window.location.href = '/madlibs/<%= madlib.id %>';
     });
   });
 
