@@ -18,14 +18,14 @@ router.get('/', function(req, res) {
 	}).done()
 });
 
-//get individual madlib
-router.get('/:id', function(req,res) {
-	db.madlib.findOne({
-		where: { id: req.params.id},
-	}).then(function(madlib){
-		res.render('madlibs/show', {renderObj: madlib});
-	})
-});
+// //get individual madlib
+// router.get('/:id', function(req,res) {
+// 	db.madlib.findOne({
+// 		where: { id: req.params.id},
+// 	}).then(function(madlib){
+// 		res.render('madlibs/show', {renderObj: madlib});
+// 	})
+// });
 
 
 // create new madlib -returns a string w/ variables
@@ -45,9 +45,9 @@ router.post('/', function(req, res) {
 			title: req.body.title,
 			body: responseText  //find a way to send the RESPONSE from the api call to the DB - This is sending the body (before it is jumbled)
 		}).then(function(result) {
-			console.log(result);
+			// console.log(result);
 			var renderObj = {title:req.body.title, body:responseText};
-			console.log(renderObj);
+			// console.log(renderObj);
 			res.render('madlibs/show', {renderObj: renderObj});
 		});
 	});
@@ -86,6 +86,47 @@ router.post('/', function(req, res) {
 		// });
 	// });
 // // });	
+
+//get individual madlib for edit
+router.get('/:id/edit', function(req, res) {
+  db.madlib.findById(req.params.id).then(function(madlib) {
+    if (madlib) {
+      res.render('madlibs/edit', {madlib: madlib});
+    } else {
+      res.status(404).render('error');
+    }
+  }).catch(function(err) {
+    res.status(500).render('error');
+  });
+});
+  
+
+//get individual madlib
+router.get('/:id', function(req,res) {
+	db.madlib.findOne({
+		where: { id: req.params.id},
+	}).then(function(madlib){
+		res.render('madlibs/show', {renderObj: madlib});
+	})
+});
+
+//put new data from edit in the database
+router.put('/:id', function(req, res) {
+	console.log("I'm in the route");
+  // db.madlib.update({
+  // 	title: req.body.title,
+  // 	body: req.body.body
+  // }, {
+  // 	where: {id: req.params.id}
+  // }).then(function(result) {
+  // 	console.log(result);
+  // })
+});  
+
+router.put('/:id', function(req, res) {
+	db.madlib.findById(req.params.id).then
+})
+
 
 
 
