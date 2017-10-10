@@ -43,6 +43,7 @@ router.post('/', function(req, res) {
 		var dataObj = body;
 		responseText = dataObj.madlib
 		responseText = JSON.stringify(responseText);
+		console.log(responseText);
 		// //code below works! just need to uncomment to reinitialize
 		db.madlib.create({
 			title: req.body.title,
@@ -50,11 +51,14 @@ router.post('/', function(req, res) {
 		}).then(function(result) {
 			// console.log(result);
 			var renderObj = {title:req.body.title, body:responseText};
-			// console.log(renderObj);
+			console.log(renderObj);
 			res.render('madlibs/show', {renderObj: renderObj});
 		});
 	});
 });
+
+
+//-------STARTER CODE FOR THE FORM FROM HEROKU-------//
  // http://libberfy.herokuapp.com?q=Hello%20world.%20Testing%20this%20API.
 //get a new madlib - returns a form as a string
 // router.post('/', function(req, res) {
@@ -94,13 +98,10 @@ router.post('/', function(req, res) {
 
 //get individual madlib for edit
 router.get('/:id/edit', function(req, res) {
-	// console.log("I am in this route", "---------------------------");
-	//this route is getting triggered using the edit button on the article (madlibs page)
   db.madlib.findById(req.params.id).then(function(madlib) {
     if (madlib) {
       res.render('madlibs/edit', {madlib: madlib});
-      // console.log("******************", req.params.id); //id is working
-      console.log(madlib.body);  //pre-edit
+      console.log(madlib.body);
     } else {
       res.status(404).render('error');
     }
@@ -119,9 +120,8 @@ router.get('/:id', function(req,res) {
 	})
 });
 
-//put new data from edit in the database
+//--------PUT - UPDATE DB----------//
 router.put('/:id', function(req, res) {
-	// console.log("I'm in the PUT route");
   db.madlib.update({
   	title: req.body.title,
   	body: req.body.body
@@ -129,13 +129,11 @@ router.put('/:id', function(req, res) {
   	where: {id: req.params.id},
   	returning: true
   }).then(function(response) {
-  	// console.log("---------------------------------");
-  	// console.log( response['1']['0'].dataValues.title );
-  	// console.log("I'm in here at the end");
   	res.render('madlibs/edit', {madlib: response['1']['0'].dataValues});
   });
 });  
 
+//-------DELETE ROUTE-----------//
 router.delete('/:id', function(req, res) {
 	console.log("In the delete route");
 	console.log("This is the req.params.id: " + req.params.id);
@@ -143,10 +141,9 @@ router.delete('/:id', function(req, res) {
 	db.madlib.destroy({
 		where: {id:req.params.id}
 	}).done();
-	// }).then(function() {
-		// window.location.href = '/profile';
-	// })
 })
+
+
 
 
 module.exports = router;
