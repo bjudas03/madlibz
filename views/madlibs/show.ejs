@@ -3,14 +3,82 @@
 
   <div class="well">
     <h2>
-      <%= renderObj.title %> </br>
+      <%= madlib.title %> </br>
     </h2> 
     <p>
-      <%= renderObj.body %>
+      <%= madlib.body %>
     </p>
   </div>
+	<a href="/madlibs/<%= madlib.id %>/input" class="btn btn-primary">Get Madlibz Form</a>
 
 
 <hr />
 
 <a href="/profile">&larr; Back Home</a>
+
+
+<script src="https://code.jquery.com/jquery.js"></script>
+
+<script>
+
+	function createButton() {
+  	var btn = document.createElement("button");
+    var t = document.createTextNode("Submit");
+    document.getElementById('madlib-input-form').appendChild(btn);
+    btn.setAttribute("id", "submit");
+    btn.appendChild(t);
+    document.getElementById('submit').setAttribute("type", "submit");
+    document.getElementById('submit').setAttribute("onClick", "submit");
+   };
+
+  function createFormInputs() {
+    for (i = 0; i<10; i++) {
+      var x = text.indexOf("<");
+      var y = text.indexOf(">")
+      var textBox = text.slice(x,y+1);
+      var createInput = document.createElement("INPUT");
+      createInput.setAttribute("type", "text");
+      createInput.setAttribute("placeholder", textBox);
+      newInput = "newInput"+id
+      createInput.setAttribute("id",newInput);
+      document.getElementById('madlib-input-form').appendChild(createInput);
+      newText = text.replace(textBox, newInput);
+      text = newText;
+      id++
+    };
+    createButton();
+  };
+
+  function replaceText() {
+    id = 0;
+    newInput = 'newInput'
+    for (i=0; i<10; i++) {
+      newInput = "newInput" + id
+      let repText = document.getElementById(newInput).value;
+      text = text.replace(newInput, repText);
+      id++;
+   }
+ };
+
+	$('#madlib-input-form').submit(function(e) {
+		cosole.log("I am in the button");
+    e.preventDefault();
+
+
+
+    var url = $(this).attr('action');
+    var data = $(this).serialize();
+    conosle.log(data);
+
+
+
+    $.ajax({
+      url: url,
+      method: 'PUT',
+      data: data
+    }).done(function(data) {
+      window.location.href = '/madlibs/<%= madlib.id %>';
+    });
+  });
+
+</script>

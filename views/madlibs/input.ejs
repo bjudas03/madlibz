@@ -1,0 +1,56 @@
+<h1>Input your new words for the Madlib below</h1>
+
+<div>
+	<form id="submit-form" action="/madlibs/show %>" method="POST">
+
+		<div id="madlib-input-form">
+		<% madlibs.forEach(function(madlib) { %>
+		<%- include('../partials/input-box', {madlibs:madlib}); %> 
+		<% console.log(madlib) %>
+		<% }) %>
+	</div>
+	<button id="input-submit" type="submit" class="btn btn-primary">Submit</button>
+	</form>
+	<a href"../profile">&larr;Back Home</a>
+</div>
+
+
+<script src="https://code.jquery.com/jquery.js"></script>
+
+<script>
+
+  $('#submit-form').submit(function(e) {
+  	console.log("I'm in the input-submit button");
+    e.preventDefault();
+    var url = $(this).attr('action');
+    console.log(url);
+    var data = $(this).serialize();
+    // console.log("This is the req.params.id" + req.params.id)
+    // console.log(data);
+    $.ajax({
+      url: url,
+      method: 'POST',
+      data: data
+    }).done(function() {
+      window.location.href = '/madlibs/<%= madlibs.id %>/show';
+    });
+  });	
+	// var newText;
+ //    for (i = 0; i<10; i++) {
+ //      var x = text.indexOf("<");
+ //      var y = text.indexOf(">")
+ //      var textBox = text.slice(x,y+1);
+ //      console.log(textBox);
+ //      var createInput = document.createElement("INPUT");
+ //      createInput.setAttribute("type", "text");
+ //      createInput.setAttribute("placeholder", textBox);
+ //      newInput = "newInput"+id
+ //      createInput.setAttribute("id",newInput);
+ //      document.getElementById('madlib-input-form').appendChild(createInput);
+ //      newText = text.replace(textBox, newInput);
+ //      text = newText;
+ //      id++
+ //    };
+ //    createButton();
+
+</script>

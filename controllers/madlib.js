@@ -8,15 +8,11 @@ var request = require('request');
 var responseText;
 var madlibs;
 
-// router.use(express.static(__dirname + '/public'));
-
+router.use(express.static(__dirname + '/public'));
+//This route is for accessing all stored libz
 router.get('/', function(req, res) {
-	// console.log("I am in this route");   --This is not it
-	//add functionality to access madlibz table
-	//access all stored madlibs
 	db.madlib.findAll()
 	.then(function(madlibs){
-		// console.log(madlibs);
 		res.render('madlibs/index', {madlibs: madlibs});
 	}).done()
 });
@@ -26,9 +22,47 @@ router.get('/:id', function(req,res) {
 	db.madlib.findOne({
 		where: { id: req.params.id},
 	}).then(function(madlib){
-		res.render('madlibs/show', {renderObj: madlib});
+		res.render('madlibs/show', {madlib: madlib});
 	})
 });
+
+router.get('/:id/input', function(req,res) {
+	var inputArr=[];
+	db.madlib.findOne({
+		where: {id:req.params.id},
+	}).then(function(madlib) {
+		// console.log(madlib)
+		console.log("I am in the /input route") //route is being accessed 
+		console.log("req.params.id: " +req.params.id)
+		var text = madlib.body
+		var index = 0;
+		var newText;
+		  for (i = 0; i<10; i++) {
+		    var x = text.indexOf("<");
+		    var y = text.indexOf(">")
+	      var textBox = text.slice(x,y+1);
+		    inputArr.push(textBox);
+		    newText = text.replace(textBox, '')
+		    text = newText;
+		   }; //-----------------------------------closes out the for loop
+		   console.log(madlib)
+		   // res.render('madlibs/input', {madlib:madlib, inputArr:inputArr}) //doesn't render with :id - fails to lookup view in directory
+		   res.render('madlibs/input', {madlibs:inputArr, id:req.params.id}) //This works - IF exp doesn't work, go back to this
+  	}); //-----------------closes out the then funciton
+});	
+
+
+
+router.post('/show', function(req,res) {
+	console.log("I'm in the input post route");
+	console.log("This is the req.params.id: " + req.params.id)
+	var data = req.body
+	console.log(data); //sends the form data back as an object (each input name is one key with many values)
+	//TODO: Get the original madlib text (with the <noun> etc in place)
+	//parse through text again to get placeholers
+	//replace placehoders with the req.body values
+	//re-post string with new text values
+})
 
 
 // create new madlib -returns a string w/ variables
@@ -43,56 +77,22 @@ router.post('/', function(req, res) {
 		var dataObj = body;
 		responseText = dataObj.madlib
 		responseText = JSON.stringify(responseText);
-		console.log(responseText);
+		console.log(responseText +"******************");
 		// //code below works! just need to uncomment to reinitialize
 		db.madlib.create({
 			title: req.body.title,
 			body: responseText  //find a way to send the RESPONSE from the api call to the DB - This is sending the body (before it is jumbled)
 		}).then(function(result) {
-			// console.log(result);
 			var renderObj = {title:req.body.title, body:responseText};
-			console.log(renderObj);
-			res.render('madlibs/show', {renderObj: renderObj});
+			// console.log(renderObj);
+			// console.log("I'm n the post route **************");
+			res.render('madlibs/show', {madlib: renderObj});
 		});
 	});
 });
 
 
-//-------STARTER CODE FOR THE FORM FROM HEROKU-------//
- // http://libberfy.herokuapp.com?q=Hello%20world.%20Testing%20this%20API.
-//get a new madlib - returns a form as a string
-// router.post('/', function(req, res) {
-// 	var url = 'http://libberfy.herokuapp.com';
-// 	var q = req.body.body;
-// 	var fullUrl = url +'?blanks=10&html_form=1&q='+q;
-// 	console.log(fullUrl);
-// 	request({
-// 		url: url,
-// 		q: q,
-// 		html_form: true,
-// 		blanks: 10
-// 		// json: true
-// 	}, function(error, response, body) {
-// 		console.log(body);      //ON THIS LINE-----------------------------
-// 		// var dataObj = body;
-// 		// responseText = dataObj.madlib
-// 		// // console.log(responseText);
-// 		// responseText = JSON.stringify(responseText);
-// 		// // console.log(responseText);
 
-// 		// //code below works! just need to uncomment to reinitialize
-// 		// db.madlib.create({
-// 		// 	title: req.body.title,
-// 		// 	body: responseText  //find a way to send the RESPONSE from the api call to the DB - This is sending the body (before it is jumbled)
-// 		// }).then(function(result) {
-// 		// 	console.log(result);
-// 		// 	res.render("madlibs/show", {madlib: responseText});
-// 		// }); //this is in for testing. Remove
-// 		// // .then(function(madlib) {
-// 		// 	// res.redirect('/madlibs/')
-		// });
-	// });
-// // });	
 
 
 
@@ -116,6 +116,7 @@ router.get('/:id', function(req,res) {
 	db.madlib.findOne({
 		where: { id: req.params.id},
 	}).then(function(madlib){
+		conosle.log(madlib);
 		res.render('madlibs/show', {renderObj: madlib});
 	})
 });
