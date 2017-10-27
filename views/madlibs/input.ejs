@@ -1,17 +1,20 @@
+<%- include('partials/navbar') %>
+
 <h1>Input your new words for the Madlib below</h1>
 
 <div>
-	<form id="submit-form" action="/madlibs/show %>" method="POST">
+	<form id="submit-form" action="/madlibs/<%=madlib.id%>/show %>" method="POST" class="form-inline">
 
 		<div id="madlib-input-form">
-		<% madlibs.forEach(function(madlib) { %>
-		<%- include('../partials/input-box', {madlibs:madlib}); %> 
-		<% console.log(madlib) %>
-		<% }) %>
+		<% var newInput = 'newInput'; %>
+		<% for (i = 0; i < inputArr.length; i++) { %>
+		<input type="text" placeholder="<%= inputArr[i] %>" name="<%= newInput + [i] %>" class="form-control" />
+	<% } %>
+
 	</div>
-	<button id="input-submit" type="submit" class="btn btn-primary">Submit</button>
+	<input id="input-submit" type="submit" class="btn btn-primary" value="Submit" />
 	</form>
-	<a href"../profile">&larr;Back Home</a>
+	<a href="/profile">&larr;Back Home</a>
 </div>
 
 
@@ -19,22 +22,22 @@
 
 <script>
 
-  $('#submit-form').submit(function(e) {
-  	console.log("I'm in the input-submit button");
-    e.preventDefault();
-    var url = $(this).attr('action');
-    console.log(url);
-    var data = $(this).serialize();
-    // console.log("This is the req.params.id" + req.params.id)
-    // console.log(data);
-    $.ajax({
-      url: url,
-      method: 'POST',
-      data: data
-    }).done(function() {
-      window.location.href = '/madlibs/<%= madlibs.id %>/show';
-    });
-  });	
+  // $('#submit-form').submit(function(e) {
+  // 	console.log("I'm in the input-submit button");
+  //   e.preventDefault();
+  //   var url = $(this).attr('action');
+  //   console.log(url);
+  //   var data = $(this).serialize();
+  //   // console.log("This is the req.params.id" + req.params.id)
+  //   console.log(data);
+  //   $.ajax({
+  //     url: url,
+  //     method: 'POST',
+  //     data: data
+  //   }).done(function() {
+  //     window.location.href = '/madlibs/<%= madlib.id %>/show';
+  //   });
+  // });	
 	// var newText;
  //    for (i = 0; i<10; i++) {
  //      var x = text.indexOf("<");

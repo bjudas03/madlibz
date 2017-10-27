@@ -1,5 +1,14 @@
 body {
 	width: 100%;
-	background: lightblue;
+	background: #A24F85;
+	padding-top: 70px
+}
 
+h1 {
+	
+}
+
+.navbar {
+	background: #4E0133;
+	border-bottom: : 3px solid #BE7BA7;
 }

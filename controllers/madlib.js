@@ -31,9 +31,6 @@ router.get('/:id/input', function(req,res) {
 	db.madlib.findOne({
 		where: {id:req.params.id},
 	}).then(function(madlib) {
-		// console.log(madlib)
-		console.log("I am in the /input route") //route is being accessed 
-		console.log("req.params.id: " +req.params.id)
 		var text = madlib.body
 		var index = 0;
 		var newText;
@@ -44,24 +41,39 @@ router.get('/:id/input', function(req,res) {
 		    inputArr.push(textBox);
 		    newText = text.replace(textBox, '')
 		    text = newText;
-		   }; //-----------------------------------closes out the for loop
-		   console.log(madlib)
-		   // res.render('madlibs/input', {madlib:madlib, inputArr:inputArr}) //doesn't render with :id - fails to lookup view in directory
-		   res.render('madlibs/input', {madlibs:inputArr, id:req.params.id}) //This works - IF exp doesn't work, go back to this
-  	}); //-----------------closes out the then funciton
+		   };
+		   // conosle.log("I am in the :id/input res.render")
+		   res.render('madlibs/input', {madlib:madlib, inputArr:inputArr})
+  	}); 
 });	
 
 
-
-router.post('/show', function(req,res) {
-	console.log("I'm in the input post route");
-	console.log("This is the req.params.id: " + req.params.id)
-	var data = req.body
-	console.log(data); //sends the form data back as an object (each input name is one key with many values)
-	//TODO: Get the original madlib text (with the <noun> etc in place)
-	//parse through text again to get placeholers
-	//replace placehoders with the req.body values
-	//re-post string with new text values
+//replace text from madlib with values from input boxes
+router.post('/:id/show', function(req,res) {
+	db.madlib.findOne({
+		where: {id:req.params.id},
+	}).then(function(madlib) {
+		var text = madlib.body;
+		var objArr = Object.entries(req.body);
+		for (i = 0; i<10; i++) {
+			var objectPair = objArr[i];
+			var repText = objectPair[1]; //access the input value for each pair in the objArr (replacement text for string)
+			//----Iterate through string and get text to BE replaced--------//
+		  var x = text.indexOf("<");
+		  var y = text.indexOf(">")
+	    var textBox = text.slice(x,y+1);
+	    //----Replace textBox w/ new text and setup to reiterate through string ---//
+	    text = text.replace(textBox, repText);
+	    
+		} 
+		console.log(text);
+		console.log("I am in the id:/show res.render")
+		console.log(madlib);
+		var renderObj = {id:madlib.dataValues.id, title:madlib.dataValues.title, body:text}
+		res.render('madlibs/show', {madlib:renderObj});
+		// res.render('madlibs/show', {madlib:madlib});      
+		// res.render('madlibs/show', {madlib:madlib, body:text})      
+	})
 })
 
 
@@ -77,15 +89,12 @@ router.post('/', function(req, res) {
 		var dataObj = body;
 		responseText = dataObj.madlib
 		responseText = JSON.stringify(responseText);
-		console.log(responseText +"******************");
-		// //code below works! just need to uncomment to reinitialize
 		db.madlib.create({
 			title: req.body.title,
-			body: responseText  //find a way to send the RESPONSE from the api call to the DB - This is sending the body (before it is jumbled)
+			body: responseText  
 		}).then(function(result) {
-			var renderObj = {title:req.body.title, body:responseText};
-			// console.log(renderObj);
-			// console.log("I'm n the post route **************");
+			// console.log(result);
+			var renderObj = {id:result.dataValues.id, title:req.body.title, body:responseText};
 			res.render('madlibs/show', {madlib: renderObj});
 		});
 	});
